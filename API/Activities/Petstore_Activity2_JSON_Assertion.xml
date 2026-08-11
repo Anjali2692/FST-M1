@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project xmlns:con="http://eviware.com/soapui/config"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    id="Petstore_Activity2_JSON_Assertion"
+                    name="Petstore_Activity2_JSON_Assertion"
+                    soapui-version="5.7.0"
+                    abortOnError="false"
+                    runType="SEQUENTIAL">
+
+  <con:settings/>
+
+  <con:interface xsi:type="con:RestService"
+                 id="Petstore_REST_Service"
+                 name="Petstore REST API"
+                 type="rest">
+
+    <con:settings/>
+
+    <con:endpoints>
+      <con:endpoint>https://petstore.swagger.io/v2</con:endpoint>
+    </con:endpoints>
+
+    <con:resource name="Find Pets By Status"
+                  path="/pet/findByStatus"
+                  id="FindByStatus_Resource">
+
+      <con:settings/>
+
+      <con:method name="GET Pets By Sold Status"
+                  id="GET_FindByStatus"
+                  method="GET">
+
+        <con:settings/>
+
+        <con:parameters>
+          <con:parameter>
+            <con:name>status</con:name>
+            <con:value>sold</con:value>
+            <con:style>QUERY</con:style>
+            <con:declared>true</con:declared>
+          </con:parameter>
+        </con:parameters>
+
+        <con:representation type="REQUEST">
+          <con:mediaType>application/json</con:mediaType>
+        </con:representation>
+
+        <con:request>
+          <con:settings/>
+          <con:endpoint>https://petstore.swagger.io/v2</con:endpoint>
+          <con:resourcePath>/pet/findByStatus</con:resourcePath>
+
+          <con:parameters>
+            <con:entry key="status" value="sold"/>
+          </con:parameters>
+
+          <con:parameterOrder>
+            <con:entry>status</con:entry>
+          </con:parameterOrder>
+
+          <con:requestHeaders>
+            <con:entry key="Accept" value="application/json"/>
+          </con:requestHeaders>
+        </con:request>
+
+      </con:method>
+    </con:resource>
+  </con:interface>
+
+  <con:testSuite id="Petstore_Activity2_Suite"
+                 name="Activity 2 - JSON Assertion">
+
+    <con:settings/>
+    <con:runType>SEQUENTIAL</con:runType>
+
+    <con:testCase id="Petstore_Activity2_TestCase"
+                  name="Find Sold Pets - JSON Assertion"
+                  failOnError="true"
+                  failTestCaseOnErrors="true"
+                  keepSession="false">
+
+      <con:settings/>
+
+      <con:testStep type="restrequest"
+                    name="GET - Find Pets By Status"
+                    id="Step_Find_Sold_Pets">
+
+        <con:settings/>
+
+        <con:config xsi:type="con:RestTestRequestStep"
+                    testCase="Petstore_Activity2_TestCase"
+                    testRequest="GET Pets By Sold Status">
+
+          <con:restRequest name="GET - Find Pets By Status">
+
+            <con:settings/>
+
+            <con:request>
+              <con:settings/>
+              <con:endpoint>https://petstore.swagger.io/v2</con:endpoint>
+              <con:resourcePath>/pet/findByStatus</con:resourcePath>
+
+              <con:parameters>
+                <con:entry key="status" value="sold"/>
+              </con:parameters>
+
+              <con:requestHeaders>
+                <con:entry key="Accept" value="application/json"/>
+              </con:requestHeaders>
+            </con:request>
+
+            <con:assertions>
+
+              <!-- Verify successful HTTP response -->
+              <con:assertion type="Valid HTTP Status Codes"
+                             name="Valid HTTP Status Code - 200">
+                <con:configuration>
+                  <codes>200</codes>
+                </con:configuration>
+              </con:assertion>
+
+              <!-- JSONPath assertion:
+                   Every returned pet must have status = sold -->
+              <con:assertion type="JsonPath Match"
+                             name="JSON Assertion - Status Sold">
+                <con:configuration>
+                  <path>$[*].status</path>
+                  <content>sold</content>
+                  <regex>false</regex>
+                  <notMatch>false</notMatch>
+                </con:configuration>
+              </con:assertion>
+
+            </con:assertions>
+
+          </con:restRequest>
+        </con:config>
+      </con:testStep>
+
+    </con:testCase>
+  </con:testSuite>
+
+</con:soapui-project>
