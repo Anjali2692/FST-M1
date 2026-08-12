@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project xmlns:con="http://eviware.com/soapui/config"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    id="Activity4" name="Activity4" soapui-version="5.7.0">
+
+  <con:interface xsi:type="con:RestService" id="ipwhois-rest"
+      name="IPWhois REST API" type="rest">
+    <con:settings/>
+    <con:restMethod id="ipwhois-json" name="IPWhois JSON" method="GET">
+      <con:settings/>
+      <con:parameters>
+        <con:parameter>
+          <con:name>IP</con:name>
+          <con:value>${DataSource#address}</con:value>
+          <con:style>TEMPLATE</con:style>
+          <con:default>136.162.168.21</con:default>
+          <con:description>IP address supplied by the DataSource.</con:description>
+        </con:parameter>
+      </con:parameters>
+      <con:request name="Request 1">
+        <con:settings/>
+        <con:endpoint>http://ipwhois.app/json/{IP}</con:endpoint>
+        <con:request/>
+        <con:originalUri>http://ipwhois.app/json/{IP}</con:originalUri>
+      </con:request>
+    </con:restMethod>
+  </con:interface>
+
+  <con:testSuite id="Activity4Suite" name="Activity4">
+    <con:description>Activity 4 - DataSource driven IPWhois REST API test</con:description>
+
+    <con:testCase id="Activity4TestCase" name="IPWhois Data Driven Test" searchProperties="true">
+      <con:description>
+        Executes the IPWhois request for each IP address in the DataSource and validates the country node using JSONPath Match.
+      </con:description>
+
+      <con:testStep type="datasource" name="DataSource" id="Activity4DataSource">
+        <con:settings/>
+        <con:config xsi:type="con:DataSourceStep">
+          <con:dataSource type="file">
+            <con:property name="address"/>
+            <con:configuration>
+              <con:filePath>activity4_ip_addresses.txt</con:filePath>
+              <con:separator>;</con:separator>
+              <con:encoding>UTF-8</con:encoding>
+              <con:firstRowIsHeader>false</con:firstRowIsHeader>
+            </con:configuration>
+          </con:dataSource>
+        </con:config>
+      </con:testStep>
+
+      <con:testStep type="restrequest" name="Request 1" id="Activity4Request">
+        <con:settings/>
+        <con:restRequest service="IPWhois REST API" resource="IPWhois JSON" method="IPWhois JSON">
+          <con:settings/>
+          <con:endpoint>http://ipwhois.app/json/${DataSource#address}</con:endpoint>
+          <con:request/>
+          <con:assertion type="JsonPath Match"
+              id="Activity4CountryAssertion"
+              name="JSONPath Match - country">
+            <con:configuration>
+              <JsonPathMatchAssertion>
+                <path>$.country</path>
+                <content>.*</content>
+                <allowWildcards>true</allowWildcards>
+                <ignoreXmlSchemaCompliance>false</ignoreXmlSchemaCompliance>
+                <regEx>true</regEx>
+                <count>1</count>
+              </JsonPathMatchAssertion>
+            </con:configuration>
+          </con:assertion>
+        </con:restRequest>
+      </con:testStep>
+
+      <con:testStep type="datasourceloop" name="DataSource Loop" id="Activity4Loop">
+        <con:settings/>
+        <con:config>
+          <con:dataSourceStep>DataSource</con:dataSourceStep>
+          <con:testStep>Request 1</con:testStep>
+          <con:restartLoop>false</con:restartLoop>
+        </con:config>
+      </con:testStep>
+
+      <con:loadTest type="http" name="LoadTest"/>
+    </con:testCase>
+  </con:testSuite>
+
+  <con:properties/>
+  <con:wssContainer/>
+  <con:oAuth2ProfileContainer/>
+  <con:oAuth1ProfileContainer/>
+  <con:reporting/>
+</con:soapui-project>
