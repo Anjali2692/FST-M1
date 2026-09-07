@@ -233,12 +233,12 @@
     <con:oAuth2Profile>
       <con:name>Nidhi_Test</con:name>
       <con:type>OAuth 2.0</con:type>
-      <con:accessToken>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</con:accessToken>
-      <con:accessTokenPosition>HEADER</con:accessTokenPosition>
-      <con:accessTokenStatus>ENTERED_MANUALLY</con:accessTokenStatus>
-      <con:accessTokenStartingStatus>ENTERED_MANUALLY</con:accessTokenStartingStatus>
-      <con:oAuth2Flow>AUTHORIZATION_CODE_GRANT</con:oAuth2Flow>
-      <con:refreshAccessTokenMethod>AUTOMATIC</con:refreshAccessTokenMethod>
+      <con:accessToken></con:accessToken>
+      <con:accessTokenPosition></con:accessTokenPosition>
+      <con:accessTokenStatus></con:accessTokenStatus>
+      <con:accessTokenStartingStatus></con:accessTokenStartingStatus>
+      <con:oAuth2Flow></con:oAuth2Flow>
+      <con:refreshAccessTokenMethod></con:refreshAccessTokenMethod>
       <con:jwtConfiguration/>
       <con:applyAdditionalParameters>false</con:applyAdditionalParameters>
       <con:responseType>id_token</con:responseType>
