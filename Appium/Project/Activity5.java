@@ -1,224 +1,64 @@
-package appium.activities;
+package appium_project;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.PointerInput;
-import org.openqa.selenium.interactions.Sequence;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.*;
+import static org.testng.Assert.assertEquals;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.Duration;
-import java.util.Collections;
-
-public class Activity2_SetDeadline {
-
-    private AndroidDriver driver;
-    private WebDriverWait wait;
+public class Activity5 {
+	AndroidDriver driver;
 
     @BeforeClass
-    public void setUp() throws MalformedURLException {
+    public void setup() throws MalformedURLException {
 
         UiAutomator2Options options = new UiAutomator2Options();
 
-        options.setDeviceName("emulator-5554");
         options.setPlatformName("Android");
         options.setAutomationName("UiAutomator2");
-
-        // Replace with actual APK location
-        options.setApp("C:\\Appium\\ToDo.apk");
+        options.setDeviceName("Android Emulator");
+        options.setApp("C:\\Apps\\ToDoList.apk");
 
         driver = new AndroidDriver(
-                new URL("http://127.0.0.1:4723"),
-                options
-        );
+                new URL("http://127.0.0.1:4723"), options);
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-    }
-
-
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+}
     @Test
-    public void setDeadlineForFirstTask() {
+    public void validLogin() {
 
-        // ==========================================
-        // Find first task
-        // ==========================================
+        driver.get("https://training-support.net/webelements");
 
-        WebElement firstTask = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        AppiumBy.xpath(
-                                "//*[@text='Complete Activity 1']"
-                        )
-                )
-        );
+        driver.findElement(AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector().scrollable(true))"
+                + ".scrollTextIntoView(\"Login Form\")"));
 
+        driver.findElement(AppiumBy.androidUIAutomator(
+                "new UiSelector().text(\"Login Form\")")).click();
 
-        // ==========================================
-        // Long press first task
-        // ==========================================
+        driver.findElement(By.id("username"))
+                .sendKeys("admin");
 
-        longPress(firstTask);
+        driver.findElement(By.id("password"))
+                .sendKeys("password");
 
+        driver.findElement(By.id("submit")).click();
 
-        // ==========================================
-        // Open/Edit task details
-        // ==========================================
+        String msg =
+                driver.findElement(By.id("action-confirmation"))
+                        .getText();
 
-        clickByText("Edit");
-
-
-        // ==========================================
-        // Open deadline/date picker
-        // ==========================================
-
-        /*
-         * Replace this locator with the actual
-         * Deadline/Date element from Appium Inspector.
-         */
-
-        clickByText("Deadline");
-
-
-        // ==========================================
-        // Select next Saturday
-        // ==========================================
-
-        selectNextSaturday();
-
-
-        // ==========================================
-        // Save edited task
-        // ==========================================
-
-        clickByText("Save");
-
-
-        // ==========================================
-        // ASSERTION
-        // ==========================================
-
-        /*
-         * Replace "Saturday" with the exact date text
-         * displayed by your application's UI if required.
-         */
-
-        Assert.assertTrue(
-                isDisplayed("Saturday"),
-                "Deadline was not set to Saturday"
-        );
-
-        System.out.println(
-                "Deadline successfully set for the first task."
-        );
-    }
-
-
-    /**
-     * Performs a long press on an element.
-     */
-    private void longPress(WebElement element) {
-
-        PointerInput finger = new PointerInput(
-                PointerInput.Kind.TOUCH,
-                "finger"
-        );
-
-        Sequence longPress = new Sequence(finger, 1);
-
-        longPress.addAction(
-                finger.createPointerMove(
-                        Duration.ZERO,
-                        PointerInput.Origin.fromElement(element),
-                        0,
-                        0
-                )
-        );
-
-        longPress.addAction(
-                finger.createPointerDown(
-                        PointerInput.MouseButton.LEFT.asArg()
-                )
-        );
-
-        longPress.addAction(
-                new org.openqa.selenium.interactions.Pause(
-                        finger,
-                        Duration.ofSeconds(2)
-                )
-        );
-
-        longPress.addAction(
-                finger.createPointerUp(
-                        PointerInput.MouseButton.LEFT.asArg()
-                )
-        );
-
-        driver.perform(
-                Collections.singletonList(longPress)
-        );
-    }
-
-
-    /**
-     * Select next Saturday from date picker.
-     *
-     * The exact implementation depends on the
-     * date picker used by the APK.
-     */
-    private void selectNextSaturday() {
-
-        /*
-         * Example approach:
-         *
-         * 1. Click next-month arrow if necessary.
-         * 2. Locate Saturday.
-         * 3. Click Saturday.
-         *
-         * Replace these locators based on
-         * Appium Inspector.
-         */
-
-        WebElement saturday = wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        AppiumBy.xpath(
-                                "//*[@text='Saturday']"
-                        )
-                )
-        );
-
-        saturday.click();
-    }
-
-
-    private void clickByText(String text) {
-
-        wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        AppiumBy.xpath("//*[@text='" + text + "']")
-                )
-        ).click();
-    }
-
-
-    private boolean isDisplayed(String text) {
-
-        return !driver.findElements(
-                AppiumBy.xpath("//*[@text='" + text + "']")
-        ).isEmpty();
-    }
-
-
-    @AfterClass
-    public void tearDown() {
-
-        if (driver != null) {
-            driver.quit();
-        }
+        assertEquals(msg,
+                "Welcome Back, admin");
     }
 }
