@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class RestAssured {
 	
 	RequestSpecification requestSpec;
-    String sshKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBhmoUhvqRISd//ptZ9SVJMFRVgqvWHWn8gd++hNcYBo azuread\\\\nidhidhande@IBM-PF5HCJKX";
+    String sshKey = "";
     int keyId;
 
     @BeforeClass
@@ -22,7 +22,7 @@ public class RestAssured {
         requestSpec = new RequestSpecBuilder()
                 .setBaseUri("https://api.github.com")
                 .setContentType(ContentType.JSON)
-                .addHeader("Authorization", "token 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")
+                .addHeader("Authorization", "token ")
                 .build();
     			}
 
