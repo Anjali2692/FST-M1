@@ -1,64 +1,64 @@
-	
+package Activities;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.Color;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
- 
+
 public class Activity5 {
-    WebDriver driver;
- 
-    // Include alwaysRun property on the @BeforeClass to make sure the page always
-    // opens
-    @BeforeClass(alwaysRun = true)
-    public void setUp() {
-        // Create a new instance of the Firefox driver
-        driver = new FirefoxDriver();
- 
-        // Open the browser
-        driver.get("https://training-support.net/webelements/target-practice");
-    }
- 
-    @Test(groups = { "HeaderTests", "ButtonTests" })
-    public void pageTitleTest() {
+	WebDriver driver;
+	
+	@BeforeClass
+	public void setUp() {
+	    driver = new FirefoxDriver();
+	    driver.manage().window().maximize();
+	    driver.get("https://training-support.net/webelements/target-practice/");
+	}
+
+	@Test(groups = {"HeaderTests"})
+	public void pageTitleTest() {
         String title = driver.getTitle();
-        System.out.println("Title is: " + title);
-        Assert.assertEquals(title, "Selenium: Target Practice");
+        System.out.println("Page Title: " + title);
+        Assert.assertEquals(title,"Selenium: Target Practice");
     }
- 
-    @Test(dependsOnMethods = { "pageTitleTest" }, groups = { "HeaderTests" })
-    public void HeaderTest1() {
-        WebElement header3 = driver.findElement(By.xpath("//h3[contains(@class, 'orange')]"));
-        Assert.assertEquals(header3.getText(), "Heading #3");
+	
+	@Test(groups = {"HeaderTests"})
+    public void thirdHeaderTest() {
+        WebElement thirdHeader = driver.findElement(By.xpath("//h3[contains(@class, 'orange')]"));
+        System.out.println("Third Header: " + thirdHeader.getText());
+        Assert.assertEquals(thirdHeader.getText(), "Heading #3");
     }
- 
-    @Test(dependsOnMethods = { "pageTitleTest" }, groups = { "HeaderTests" })
-    public void HeaderTest2() {
-        Color header5Color = Color.fromString(driver.findElement(By.cssSelector("h5.text-purple-600")).getCssValue("color"));
-        Assert.assertEquals(header5Color.asHex(), "#9333ea");
+	
+	@Test(groups = {"HeaderTests"})
+    public void fifthHeaderColorTest() {
+        WebElement fifthHeader = driver.findElement(By.cssSelector("h5.text-purple-600"));
+        String color = fifthHeader.getCssValue("color");
+        System.out.println("Fifth Header Color: " + color);
+        Assert.assertEquals(color, "rgb(147, 51, 234)");
     }
- 
-    @Test(dependsOnMethods = { "pageTitleTest" }, groups = { "ButtonTests" })
-    public void ButtonTest1() {
-        WebElement button1 = driver.findElement(By.xpath("//button[contains(@class, 'emerald')]"));
-        Assert.assertEquals(button1.getText(), "Emerald");
+	
+	@Test(groups = {"ButtonTests"})
+    public void emeraldButtonTest() {
+        WebElement emeraldButton = driver.findElement(By.xpath("//button[contains(@class, 'emerald')]"));
+        System.out.println("Emerald Button Text: " + emeraldButton.getText());
+        Assert.assertEquals(emeraldButton.getText(), "Emerald");
     }
- 
-    @Test(dependsOnMethods = { "pageTitleTest" }, groups = { "ButtonTests" })
-    public void ButtonTest2() {
-        Color button2Color = Color.fromString(driver.findElement(By.xpath("//button[contains(@class, 'purple')]")).getCssValue("color"));
-        Assert.assertEquals(button2Color.asHex(), "#581c87");
+	
+	@Test(groups = {"ButtonTests"})
+    public void firstButtonThirdRowTest() {
+        WebElement button = driver.findElement(
+        		By.xpath("//button[contains(@class, 'purple')]"));
+        String color = button.getCssValue("background-color");
+        System.out.println("Button Color: " + color);
+        Assert.assertEquals(color, "rgb(107, 33, 168)");
     }
- 
-    // Include alwaysRun property on the @AfterClass to make sure the page always
-    // closes
-    @AfterClass(alwaysRun = true)
-    public void tearDown() {
-        // Close the browser
-        driver.close();
-    }
+	
+	@AfterClass
+	public void tearDown() {
+	    driver.close();
+	}
 }
