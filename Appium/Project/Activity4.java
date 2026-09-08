@@ -1,172 +1,72 @@
-package appium.activities;
+package appium_project;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.*;
+import static org.testng.Assert.assertEquals;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.Duration;
 
-public class Activity1_CreateTasks {
-
-    private AndroidDriver driver;
-    private WebDriverWait wait;
+public class Activity4 {
+	AndroidDriver driver;
 
     @BeforeClass
-    public void setUp() throws MalformedURLException {
+    public void setup() throws MalformedURLException {
 
         UiAutomator2Options options = new UiAutomator2Options();
 
-        options.setDeviceName("emulator-5554");
         options.setPlatformName("Android");
         options.setAutomationName("UiAutomator2");
-
-        // Replace with your actual APK path
-        options.setApp("C:\\Appium\\ToDo.apk");
+        options.setDeviceName("Android Emulator");
+        options.setApp("C:\\Apps\\ToDoList.apk");
 
         driver = new AndroidDriver(
-                new URL("http://127.0.0.1:4723"),
-                options
-        );
+                new URL("http://127.0.0.1:4723"), options);
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-    }
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+}
 
-    @Test
-    public void createThreeTasks() {
+	@Test
+	public void todoList() {
 
-        // ==========================================
-        // TASK 1 - High Priority
-        // ==========================================
+	    driver.get("https://training-support.net/webelements");
 
-        clickByText("New");
+	    driver.findElement(AppiumBy.androidUIAutomator(
+	            "new UiScrollable(new UiSelector().scrollable(true))"
+	            + ".scrollTextIntoView(\"To-Do List\")"));
 
-        enterTask("Complete Activity 1");
+	    driver.findElement(AppiumBy.androidUIAutomator(
+	            "new UiSelector().text(\"To-Do List\")")).click();
 
-        selectPriority("High");
+	    WebElement input =
+	            driver.findElement(By.id("todo-input"));
 
-        clickByText("Save");
+	    input.sendKeys("Add tasks to list");
+	    driver.findElement(By.id("todo-add")).click();
 
+	    input.sendKeys("Get number of tasks");
+	    driver.findElement(By.id("todo-add")).click();
 
-        // ==========================================
-        // TASK 2 - Medium Priority
-        // ==========================================
+	    input.sendKeys("Clear the list");
+	    driver.findElement(By.id("todo-add")).click();
 
-        clickByText("New");
+	    List<WebElement> tasks =
+	            driver.findElements(By.xpath("//li"));
 
-        enterTask("Complete Activity 2");
+	    tasks.get(2).click();
+	    tasks.get(3).click();
+	    tasks.get(4).click();
 
-        selectPriority("Medium");
-
-        clickByText("Save");
-
-
-        // ==========================================
-        // TASK 3 - Low Priority
-        // ==========================================
-
-        clickByText("New");
-
-        enterTask("Complete Activity 3");
-
-        selectPriority("Low");
-
-        clickByText("Save");
-
-
-        // ==========================================
-        // ASSERTIONS
-        // ==========================================
-
-        Assert.assertTrue(
-                isTaskDisplayed("Complete Activity 1"),
-                "Complete Activity 1 was not added"
-        );
-
-        Assert.assertTrue(
-                isTaskDisplayed("Complete Activity 2"),
-                "Complete Activity 2 was not added"
-        );
-
-        Assert.assertTrue(
-                isTaskDisplayed("Complete Activity 3"),
-                "Complete Activity 3 was not added"
-        );
-
-        System.out.println("All three tasks were successfully added.");
-    }
-
-
-    /**
-     * Enter task name.
-     *
-     * Replace the EditText locator with the
-     * actual locator from Appium Inspector.
-     */
-    private void enterTask(String taskName) {
-
-        WebElement input = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        AppiumBy.className("android.widget.EditText")
-                )
-        );
-
-        input.clear();
-        input.sendKeys(taskName);
-    }
-
-
-    /**
-     * Select priority.
-     *
-     * Update this method according to the actual
-     * priority control in your application.
-     */
-    private void selectPriority(String priority) {
-
-        // Example:
-        // Click priority dropdown
-        //
-        // driver.findElement(
-        //     AppiumBy.id("your.package:id/priority")
-        // ).click();
-
-        clickByText(priority);
-    }
-
-
-    private void clickByText(String text) {
-
-        WebElement element = wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        AppiumBy.xpath("//*[@text='" + text + "']")
-                )
-        );
-
-        element.click();
-    }
-
-
-    private boolean isTaskDisplayed(String taskName) {
-
-        return !driver.findElements(
-                AppiumBy.xpath("//*[@text='" + taskName + "']")
-        ).isEmpty();
-    }
-
-
-    @AfterClass
-    public void tearDown() {
-
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+	    assertEquals(tasks.size(),5);
+	}
 }
