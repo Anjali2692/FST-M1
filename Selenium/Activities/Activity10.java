@@ -1,3 +1,7 @@
+package activity;
+
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -5,40 +9,41 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 
 public class Activity10 {
-    public static void main(String[] args) {
-        // Create a new instance of the Firefox driver
-        WebDriver driver = new FirefoxDriver();
-        // Create the Actions object
-        Actions builder = new Actions(driver);
 
-        // Open the page
+	public static void main(String[] args) {
+		WebDriver driver = new FirefoxDriver();
         driver.get("https://training-support.net/webelements/mouse-events");
-        // Print the title of the page
-        System.out.println("Page title: " + driver.getTitle());
+        driver.manage().window().maximize();
+        System.out.println("Page Title: " + driver.getTitle());
 
-        // Find the elements that can be clicked
+        Actions actions = new Actions(driver);
         WebElement cargoLock = driver.findElement(By.xpath("//h1[text()='Cargo.lock']"));
         WebElement cargoToml = driver.findElement(By.xpath("//h1[text()='Cargo.toml']"));
-        WebElement srcButton = driver.findElement(By.xpath("//h1[text()='src']"));
-        WebElement targetButton = driver.findElement(By.xpath("//h1[text()='target']"));
+        
+        actions
+               .click(cargoLock).pause(1000)
+               .moveToElement(cargoToml).pause(4000)
+               .click()
+               .build()
+               .perform();
 
-        // Perform left click on Cargo.lock and then on Cargo.toml
-        builder.click(cargoLock).pause(1000).moveToElement(cargoToml).pause(5000).click(cargoToml).build().perform();
-        // Print the front side text
-        String actionMessage = driver.findElement(By.id("result")).getText();
-        System.out.println(actionMessage);
+        WebElement resultText1 = driver.findElement(By.id("result"));
+        System.out.println("First Action Result: " + resultText1.getText());
 
-        // Perform double click on src
-        // then right click on target
-        builder.doubleClick(srcButton).pause(3000).pause(5000)
-        .contextClick(targetButton).pause(3000).build().perform();
-        // and then open it
-        builder.click(driver.findElement(By.xpath("//div[@id='menu']/div/ul/li[1]"))).pause(5000).build().perform();
-        // Print the front side text
-        actionMessage = driver.findElement(By.id("result")).getText();
-        System.out.println(actionMessage);
+        WebElement src = driver.findElement(By.xpath("//h1[text()='src']"));
+        WebElement target = driver.findElement(By.xpath("//h1[text()='target']"));
+        actions
+                .doubleClick(src).pause(4000)
+                .contextClick(target).pause(4000)
+                .build()
+                .perform();
 
-        // Close the browser
-        driver.quit();
+         WebElement openOption = driver.findElement(By.xpath("//div[@id='menu']/div/ul/li[1]"));
+         openOption.click();
+
+         WebElement resultText2 = driver.findElement(By.id("result"));
+         System.out.println("Second Action Result: " + resultText2.getText());
+         driver.quit();
+        
     }
 }
