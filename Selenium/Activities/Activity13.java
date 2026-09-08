@@ -1,38 +1,38 @@
+package activity;
+
+import java.time.Duration;
 import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 
 public class Activity13 {
-    public static void main(String[] args) {
-        // Initialize the Firefox driver
-        WebDriver driver = new FirefoxDriver();
 
-        // Open the page
+	public static void main(String[] args) {
+		WebDriver driver = new FirefoxDriver();
         driver.get("https://training-support.net/webelements/tables");
-        // Print the title of the page
-        System.out.println("Page title: " + driver.getTitle());
+        driver.manage().window().maximize();
+        System.out.println("Page Title: " + driver.getTitle());
 
-        // Print the number of columns
-        List<WebElement> cols = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/thead/tr/th"));
-        System.out.println("Number of columns: " + cols.size());
-        // Print the number of rows
-        List<WebElement> rows = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr"));
-        System.out.println("Number of rows: " + rows.size());
+        List<WebElement> rows = driver.findElements(By.xpath("//table/tbody/tr"));
+        System.out.println("Number of Rows: " + rows.size());
 
-        // Print the cells values of the third row
-        List<WebElement> thirdRow = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr[3]/td"));
-        System.out.println("Third row cell values: ");
-        for(WebElement cell : thirdRow) {
-            System.out.println(cell.getText());
-        }
+        List<WebElement> columns = driver.findElements(By.xpath("//table/thead/tr/th"));
+        System.out.println("Number of Columns: " + columns.size());
+        System.out.println("\nValues in Third Row:");
 
-        // Print the cell value of the second row and second column
-        WebElement cellValue = driver.findElement(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr[2]/td[2]"));
-        System.out.println("Second row, second cell value: " + cellValue.getText());
+        List<WebElement> thirdRowCells = driver.findElements(By.xpath("//table/tbody/tr[3]/td"));
+            for (WebElement cell : thirdRowCells) {
+                System.out.print(cell.getText() + " ");
+            }
 
-        // Close the browser
+        WebElement cellValue = driver.findElement(By.xpath("//table/tbody/tr[2]/td[2]"));
+        System.out.println("\n\nValue at Row 2, Column 2: " + cellValue.getText());
+
         driver.quit();
+        
     }
 }
