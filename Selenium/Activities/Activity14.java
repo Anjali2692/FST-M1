@@ -1,38 +1,39 @@
+package activity;
+
+import java.time.Duration;
 import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 
 public class Activity14 {
-    public static void main(String[] args) {
-        // Create a new instance of the Firefox driver
-        WebDriver driver = new FirefoxDriver();
 
-        // Open the page
+	public static void main(String[] args) {
+		WebDriver driver = new FirefoxDriver();
         driver.get("https://training-support.net/webelements/tables");
-        // Print the title of the page
-        System.out.println("Page title: " + driver.getTitle());
+        driver.manage().window().maximize();
+        System.out.println("Page Title: " + driver.getTitle());
 
-        // Print the number of columns
-        List<WebElement> cols = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/thead/tr/th"));
-        System.out.println("Number of columns: " + cols.size());
-        // Print the number of rows
-        List<WebElement> rows = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr"));
-        System.out.println("Number of rows: " + rows.size());
+        List<WebElement> rows = driver.findElements(By.xpath("//table/tbody/tr"));
+        System.out.println("Number of Rows: " + rows.size());
 
-        // Print the Book Name in the 5th row
-        WebElement cellValue = driver.findElement(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr[5]/td[2]"));
-        System.out.println("Book name before sorting: " + cellValue.getText());
+        List<WebElement> columns = driver.findElements(By.xpath("//table/thead/tr/th"));
+        System.out.println("Number of Columns: " + columns.size());
 
-        // Sort the table
-        driver.findElement(By.xpath("//table[contains(@class, 'table-auto')]/thead/tr/th[5]")).click();
+        WebElement bookBeforeSort = driver.findElement(By.xpath("//table/tbody/tr[5]/td[1]"));
+        System.out.println("Book in 5th Row (Before Sorting): " + bookBeforeSort.getText());
 
-        // Print the cell value of the second row and second column again
-        cellValue = driver.findElement(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr[5]/td[2]"));
-        System.out.println("Book Name after sorting: " + cellValue.getText());
+        WebElement priceHeader = driver.findElement(By.xpath("//table/thead/tr/th[contains(text(),'Price')]"));
+        priceHeader.click();
 
-        // Close the browser
-        driver.quit();
-    }
+        //Thread.sleep(1000);
+
+        WebElement bookAfterSort = driver.findElement(By.xpath("//table/tbody/tr[5]/td[1]"));
+        System.out.println("Book in 5th Row (After Sorting): " + bookAfterSort.getText());
+
+       //driver.quit(); 
+	}
 }
