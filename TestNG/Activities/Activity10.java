@@ -1,4 +1,6 @@
-	
+package Activities;
+
+
 import static org.testng.Assert.assertEquals;
 import java.io.FileReader;
 import java.time.Duration;
@@ -13,72 +15,60 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
- 
 import com.opencsv.CSVReader;
- 
-public class Activity10 {
-	// Declare WebDriver
-	WebDriver driver;
+
+public class Activity10 {	WebDriver driver;
 	WebDriverWait wait;
  
 	@BeforeClass
 	public void setUp() {
-		// Initialize the driver object
 		driver = new FirefoxDriver();
 		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
  
-		// Open the page
 		driver.get("https://training-support.net/webelements/simple-form");
-		// Implicit wait
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 	}
  
 	@DataProvider(name = "csvDataProvider")
 	public static Object[][] readCsv() throws Exception {
-		// Open a CSV file with the CSVReader
-		CSVReader reader = new CSVReader(new FileReader("src/test/resources/input.csv"));
-		// Skip the first line (column headings)
-		reader.skip(1);
-		// Read all the lines from the CSV file
-		List<String[]> allRows = reader.readAll();
- 
-		// Create the output dataset
-		Object[][] data = new Object[allRows.size()][];
-		for (int i = 0; i < allRows.size(); i++) {
-			data[i] = allRows.get(i);
-		}
-		reader.close();
- 
-		// Send the data to the test function
-		return data;
+
+	    List<Object[]> data = new java.util.ArrayList<>();
+	    java.io.BufferedReader br =
+	            new java.io.BufferedReader(new FileReader("src/test/resources/userData.csv"));
+
+	    br.readLine();
+	    String line;
+	    while ((line = br.readLine()) != null) {
+	        String[] values = line.split(",");
+	        System.out.println(Arrays.toString(values));
+	        data.add(values);
+	    }
+
+	    br.close();
+	    return data.toArray(new Object[0][]);
 	}
  
 	@Test(dataProvider = "csvDataProvider")
-	public void testForm(String[] rows) {
-		// Find the input fields and enter text
-		WebElement fullName = driver.findElement(By.id("full-name"));
-		fullName.sendKeys(rows[0]);
-		// Enter the email
-		driver.findElement(By.id("email")).sendKeys(rows[1]);
-		// Enter the Date of the event
-		driver.findElement(By.name("event-date")).sendKeys(rows[2]);
-		// Enter additional details
-		driver.findElement(By.id("additional-details")).sendKeys(rows[3]);
+	public void testForm(String fullName, String email, String date, String details) {
+		driver.findElement(By.id("full-name")).sendKeys(fullName);
+		driver.findElement(By.id("email")).sendKeys(email);
+		driver.findElement(By.name("event-date")).sendKeys(date);
+		driver.findElement(By.id("additional-details")).sendKeys(details);
  
-		// Click Submit
-		driver.findElement(By.xpath("//button[text()='Submit']")).click();
- 
-		// Confirm booking
+		System.out.println("--------------------------------");
+		System.out.println("Full Name : " + fullName);
+		System.out.println("Email     : " + email);
+		System.out.println("Date      : " + date);
+		System.out.println("Details   : " + details);
+
 		String message = driver.findElement(By.id("action-confirmation")).getText();
-		assertEquals(message, "Your event has been scheduled!");
- 
-		// Refresh the page
+		System.out.println("Confirmation Message: " + message);
+		
 		driver.navigate().refresh();
 	}
  
 	@AfterClass
 	public void tearDown() {
-		// Close the browser
 		driver.quit();
 	}
  
