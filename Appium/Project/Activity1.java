@@ -1,172 +1,79 @@
-package appium.activities;
+package appium_project;
 
-import io.appium.java_client.AppiumBy;
-import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.*;
+import static org.testng.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.List;
 
-public class Activity1_CreateTasks {
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.*;
 
-    private AndroidDriver driver;
-    private WebDriverWait wait;
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
+
+public class Activity1 {
+	AndroidDriver driver;
 
     @BeforeClass
-    public void setUp() throws MalformedURLException {
+    public void setup() throws MalformedURLException {
 
-        // Configure your Appium capabilities here
-        // Replace with your actual device/app configuration
-
-        // Example:
-        /*
         UiAutomator2Options options = new UiAutomator2Options();
-        options.setDeviceName("emulator-5554");
+
         options.setPlatformName("Android");
         options.setAutomationName("UiAutomator2");
-        options.setApp("/path/to/ToDo.apk");
+        options.setDeviceName("Android Emulator");
+        options.setApp("C:\\Apps\\ToDoList.apk");
 
         driver = new AndroidDriver(
-                new URL("http://127.0.0.1:4723"),
-                options
-        );
-        */
+                new URL("http://127.0.0.1:4723"), options);
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @Test
-    public void createThreeTasks() {
+    public void addTasks() {
 
-        // -----------------------------
-        // Task 1
-        // -----------------------------
+        String[] task = {
+                "Complete Activity 1",
+                "Complete Activity 2",
+                "Complete Activity 3"
+        };
 
-        click("New");
+        for(int i=0;i<task.length;i++) {
 
-        enterTask("Complete Activity 1");
+            driver.findElement(AppiumBy.accessibilityId("New")).click();
 
-        selectPriority("1");
+            driver.findElement(By.id("text")).sendKeys(task[i]);
 
-        selectDueDate("Wednesday");
+            driver.findElement(By.id("priority")).click();
 
-        click("OK");
+            driver.findElement(AppiumBy.androidUIAutomator(
+                    "new UiSelector().text(\""+(i+1)+"\")")).click();
 
+            driver.findElement(By.id("date")).click();
 
-        // -----------------------------
-        // Task 2
-        // -----------------------------
+            if(i<2)
+                driver.findElement(AppiumBy.androidUIAutomator(
+                        "new UiSelector().text(\"Wednesday\")")).click();
+            else
+                driver.findElement(AppiumBy.androidUIAutomator(
+                        "new UiSelector().text(\"Thursday\")")).click();
 
-        click("New");
+            driver.findElement(By.id("ok")).click();
+        }
 
-        enterTask("Complete Activity 2");
+        List<WebElement> tasks =
+                driver.findElements(By.id("taskText"));
 
-        selectPriority("2");
-
-        selectDueDate("Wednesday");
-
-        click("OK");
-
-
-        // -----------------------------
-        // Task 3
-        // -----------------------------
-
-        click("New");
-
-        enterTask("Complete Activity 3");
-
-        selectPriority("3");
-
-        selectDueDate("Thursday");
-
-        click("OK");
-
-
-        // -----------------------------
-        // Assertions
-        // -----------------------------
-
-        Assert.assertTrue(
-                isTaskDisplayed("Complete Activity 1"),
-                "Activity 1 was not added"
-        );
-
-        Assert.assertTrue(
-                isTaskDisplayed("Complete Activity 2"),
-                "Activity 2 was not added"
-        );
-
-        Assert.assertTrue(
-                isTaskDisplayed("Complete Activity 3"),
-                "Activity 3 was not added"
-        );
+        assertEquals(tasks.size(),3);
     }
-
-
-    private void click(String text) {
-
-        wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        AppiumBy.xpath("//*[@text='" + text + "']")
-                )
-        ).click();
-    }
-
-
-    private void enterTask(String task) {
-
-        WebElement input = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        AppiumBy.className("android.widget.EditText")
-                )
-        );
-
-        input.clear();
-        input.sendKeys(task);
-    }
-
-
-    private void selectPriority(String priority) {
-
-        // Replace this locator with the actual priority element
-        // from Appium Inspector.
-
-        driver.findElement(
-                AppiumBy.xpath("//*[@text='" + priority + "']")
-        ).click();
-    }
-
-
-    private void selectDueDate(String day) {
-
-        // Replace with actual date picker implementation
-        // based on your application.
-
-        driver.findElement(
-                AppiumBy.xpath("//*[@text='" + day + "']")
-        ).click();
-    }
-
-
-    private boolean isTaskDisplayed(String task) {
-
-        return !driver.findElements(
-                AppiumBy.xpath("//*[@text='" + task + "']")
-        ).isEmpty();
-    }
-
 
     @AfterClass
-    public void tearDown() {
-
-        if (driver != null) {
-            driver.quit();
-        }
+    public void quit() {
+        driver.quit();
     }
 }
