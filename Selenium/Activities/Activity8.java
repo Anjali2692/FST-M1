@@ -1,4 +1,7 @@
+package activity;
+
 import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,35 +10,29 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Activity8 {
-    public static void main(String[] args) {
-        // Driver object reference
+
+	public static void main(String[] args) {
+
         WebDriver driver = new FirefoxDriver();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        // Open the browser
-        driver.get("https://www.training-support.net/webelements/dynamic-controls");
-
-        // Verify page title
-        System.out.println("Page title is: " + driver.getTitle());
-
-        // Find the checkbox and make sure it is visible
-        WebElement checkbox = driver.findElement(By.id("checkbox"));
-        System.out.println("Checkbox is visible? " + checkbox.isDisplayed());
-
-        // Find the button to toggle it and click it
-        driver.findElement(By.xpath("//button[text()='Toggle Checkbox']")).click();
-        // Wait for it to disappear
-        wait.until(ExpectedConditions.invisibilityOf(checkbox));
-        // Check if it is visible
-        System.out.println("Checkbox is visible? " + checkbox.isDisplayed());
+        driver.get("https://training-support.net/webelements/dynamic-controls");
+        driver.manage().window().maximize();
+        System.out.println("Page Title: " + driver.getTitle());
         
-        // Toggle the checkbox and click it
-        driver.findElement(By.xpath("//button[text()='Toggle Checkbox']")).click();
-        wait.until(ExpectedConditions.elementToBeClickable(checkbox)).click();
-        // Check if it is selected
-        System.out.println("Checkbox is selected? " + checkbox.isSelected());
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        
+        By checkboxLocator = By.id("checkbox");
+        By toggleButton = By.xpath("//button[text()='Toggle Checkbox']");
 
-        // Close the browser
-        driver.quit();
+        driver.findElement(toggleButton).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(checkboxLocator));
+        System.out.println("Checkbox removed");
+        driver.findElement(toggleButton).click();
+        
+        WebElement checkbox = wait.until(ExpectedConditions.presenceOfElementLocated(checkboxLocator));
+        System.out.println("Checkbox appeared");
+
+        checkbox.click();
+        System.out.println("Checkbox selected");
+        driver.quit();      
     }
 }
