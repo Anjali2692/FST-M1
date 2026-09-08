@@ -1,3 +1,25 @@
+package Activity;
+
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.time.Duration;
+
 public class Activity4 {
     // Driver Declaration
     AndroidDriver driver;
@@ -51,7 +73,7 @@ public class Activity4 {
  
         // Assertion
         String contactName = driver.findElement(AppiumBy.id("large_title")).getText();
-        Assert.assertEquals(contactName, "Aaditya Varma");
+        Assert.assertEquals(contactName, "Nidhi D");
     }
  
     // Tear down method
