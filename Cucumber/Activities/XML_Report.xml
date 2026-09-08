@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="25.382" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-07-02T02:58:34.518274400Z">
+<testcase classname="To test input with Datatables" name="Adding items to a to-do list" time="8.559">
+<system-out><![CDATA[
+Given user is on the To-Do list page........................................passed
+When user adds the following tasks..........................................passed
+Then they can see the task added to the list................................passed
+]]></system-out>
+</testcase>
+</testsuite>
