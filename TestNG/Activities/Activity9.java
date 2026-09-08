@@ -1,4 +1,5 @@
-	
+package Activities;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,109 +10,90 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
- 
+
 public class Activity9 {
     WebDriver driver;
  
     @BeforeClass
     public void setUp() {
-        // Create a new instance of the Firefox driver
         driver = new FirefoxDriver();
- 
-        Reporter.log("Starting Test |");
-        // Open browser
+        Reporter.log("Starting Test", true);
         driver.get("https://training-support.net/webelements/alerts");
         Reporter.log("Opened Browser |");
- 
-        // Print title of page
         Reporter.log("Page title is " + driver.getTitle() + " |");
     }
  
     @BeforeMethod
     public void beforeMethod() {
-        Reporter.log("Test Case Setup started |");
+        Reporter.log("Test Case Setup started |",true);
         driver.switchTo().defaultContent();
     }
  
     @Test(priority = 1)
     public void simpleAlertTestCase() {
-        Reporter.log("simpleAlertTestCase() started |");
-        // Click the button to open a simple alert
+        Reporter.log("simpleAlertTestCase() started |",true);
         driver.findElement(By.id("simple")).click();
-        Reporter.log("Simple Alert opened |");
+        Reporter.log("Simple Alert opened |",true);
+        
  
-        // Switch to alert window
         Alert simpleAlert = driver.switchTo().alert();
-        Reporter.log("Switched foucs to alert |");
+        Reporter.log("Switched foucs to alert |",true);
  
-        // Get text in the alert box and print it
         String alertText = simpleAlert.getText();
-        Reporter.log("Alert text is: " + alertText + " |");
+        Reporter.log("Alert text is: " + alertText + " |",true);
  
-        // Assertion
         Assert.assertEquals("You've just triggered a simple alert!", alertText);
  
         simpleAlert.accept();
-        Reporter.log("Alert closed");
+        Reporter.log("Alert closed",true);
  
-        Reporter.log("Test case ended |");
+        Reporter.log("Test case ended |",true);
     }
  
     @Test(priority = 2)
     public void confirmAlertTestCase() {
-        Reporter.log("confirmAlertTestCase() started |");
-        // Click the button to open a simple alert
+        Reporter.log("confirmAlertTestCase() started |",true);
         driver.findElement(By.id("confirmation")).click();
-        Reporter.log("Confirm Alert opened |");
+        Reporter.log("Confirm Alert opened |",true);
  
-        // Switch to alert window
         Alert confirmAlert = driver.switchTo().alert();
-        Reporter.log("Switched foucs to alert |");
+        Reporter.log("Switched foucs to alert |",true);
  
-        // Get text in the alert box and print it
         String alertText = confirmAlert.getText();
-        Reporter.log("Alert text is: " + alertText + " |");
+        Reporter.log("Alert text is: " + alertText + " |",true);
  
-        // Assertion
         Assert.assertEquals("You've just triggered a confirmation alert!", alertText);
  
         confirmAlert.accept();
-        Reporter.log("Alert closed |");
+        Reporter.log("Alert closed |",true);
  
-        Reporter.log("Test case ended |");
+        Reporter.log("Test case ended |",true);
     }
  
     @Test(priority = 3)
     public void promptAlertTestCase() {
-        Reporter.log("promptAlertTestCase() started |");
-        // Click the button to open a simple alert
+        Reporter.log("promptAlertTestCase() started |",true);
         driver.findElement(By.id("prompt")).click();
-        Reporter.log("Prompt Alert opened |");
+        Reporter.log("Prompt Alert opened |",true);
  
-        // Switch to alert window
         Alert promptAlert = driver.switchTo().alert();
-        Reporter.log("Switched foucs to alert |");
+        Reporter.log("Switched foucs to alert |",true);
  
-        // Get text in the alert box and print it
         String alertText = promptAlert.getText();
-        Reporter.log("Alert text is: " + alertText + " |");
+        Reporter.log("Alert text is: " + alertText + " |",true);
  
-        // Assertion
         Assert.assertEquals("I'm a Prompt! Type something into me!", alertText);
-        // Type some text into the prompt
         promptAlert.sendKeys("Awesome!");
-        Reporter.log("Text entered in prompt alert |");
-        // Close the prompt
+        Reporter.log("Text entered in prompt alert |",true);
         promptAlert.accept();
-        Reporter.log("Alert closed |");
+        Reporter.log("Alert closed |",true);
  
-        Reporter.log("Test case ended |");
+        Reporter.log("Test case ended |",true);
     }
  
     @AfterClass
     public void tearDown() {
         Reporter.log("Ending Test |");
-        // Close the driver
         driver.close();
     }
 }
