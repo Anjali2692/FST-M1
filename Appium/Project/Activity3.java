@@ -1,141 +1,55 @@
-package appium.activities;
+package appium_project;
 
-import io.appium.java_client.AppiumBy;
-import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.*;
+import static org.testng.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.List;
 
-public class Activity3_CompleteTasks {
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-    private AndroidDriver driver;
-    private WebDriverWait wait;
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
 
+public class Activity3 {
+	AndroidDriver driver;
 
     @BeforeClass
-    public void setUp() throws MalformedURLException {
+    public void setup() throws MalformedURLException {
 
-        /*
         UiAutomator2Options options = new UiAutomator2Options();
 
-        options.setDeviceName("emulator-5554");
         options.setPlatformName("Android");
         options.setAutomationName("UiAutomator2");
-        options.setApp("/path/to/ToDo.apk");
+        options.setDeviceName("Android Emulator");
+        options.setApp("C:\\Apps\\ToDoList.apk");
 
         driver = new AndroidDriver(
-                new URL("http://127.0.0.1:4723"),
-                options
-        );
-        */
+                new URL("http://127.0.0.1:4723"), options);
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
+	
+@Test
+public void completeTasks() {
 
-    @Test
-    public void completeFirstTwoTasks() {
+    List<WebElement> checkbox =
+            driver.findElements(By.id("completed"));
 
-        // --------------------------------
-        // Mark Activity 1 complete
-        // --------------------------------
+    checkbox.get(0).click();
+    checkbox.get(1).click();
 
-        markTaskComplete("Complete Activity 1");
+    driver.findElement(AppiumBy.accessibilityId("Show completed")).click();
 
+    List<WebElement> remaining =
+            driver.findElements(By.id("taskText"));
 
-        // --------------------------------
-        // Mark Activity 2 complete
-        // --------------------------------
-
-        markTaskComplete("Complete Activity 2");
-
-
-        // --------------------------------
-        // Toggle completed tasks
-        // --------------------------------
-
-        clickCompletedTaskToggle();
-
-
-        // --------------------------------
-        // Verify Activity 3 exists
-        // --------------------------------
-
-        Assert.assertTrue(
-                isDisplayed("Complete Activity 3"),
-                "Activity 3 should be displayed"
-        );
-
-
-        // --------------------------------
-        // Verify Activity 1 is NOT displayed
-        // --------------------------------
-
-        Assert.assertFalse(
-                isDisplayed("Complete Activity 1"),
-                "Activity 1 should not be displayed"
-        );
-
-
-        // --------------------------------
-        // Verify Activity 2 is NOT displayed
-        // --------------------------------
-
-        Assert.assertFalse(
-                isDisplayed("Complete Activity 2"),
-                "Activity 2 should not be displayed"
-        );
-    }
-
-
-    private void markTaskComplete(String taskName) {
-
-        WebElement task = wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        AppiumBy.xpath(
-                                "//*[@text='" + taskName + "']"
-                        )
-                )
-        );
-
-        task.click();
-    }
-
-
-    private void clickCompletedTaskToggle() {
-
-        /*
-         * Replace this locator with the actual
-         * completed-task toggle from Appium Inspector.
-         */
-
-        driver.findElement(
-                AppiumBy.accessibilityId(
-                        "Toggle completed tasks"
-                )
-        ).click();
-    }
-
-
-    private boolean isDisplayed(String text) {
-
-        return !driver.findElements(
-                AppiumBy.xpath("//*[@text='" + text + "']")
-        ).isEmpty();
-    }
-
-
-    @AfterClass
-    public void tearDown() {
-
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+    assertEquals(remaining.size(),1);
+}
 }
