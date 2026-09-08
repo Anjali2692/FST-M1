@@ -1,38 +1,46 @@
-import java.util.List;
+package activity;
+
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 
-public class Activity13 {
-    public static void main(String[] args) {
-        // Initialize the Firefox driver
-        WebDriver driver = new FirefoxDriver();
+public class Activity12 {
 
-        // Open the page
-        driver.get("https://training-support.net/webelements/tables");
-        // Print the title of the page
-        System.out.println("Page title: " + driver.getTitle());
+	public static void main(String[] args) {
+		WebDriver driver = new FirefoxDriver();
+        driver.get("https://training-support.net/webelements/drag-drop");
+        driver.manage().window().maximize();
+        System.out.println("Page Title: " + driver.getTitle());
 
-        // Print the number of columns
-        List<WebElement> cols = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/thead/tr/th"));
-        System.out.println("Number of columns: " + cols.size());
-        // Print the number of rows
-        List<WebElement> rows = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr"));
-        System.out.println("Number of rows: " + rows.size());
+        WebElement ball = driver.findElement(By.id("ball"));
+        WebElement dropzone1 = driver.findElement(By.id("dropzone1"));
+        WebElement dropzone2 = driver.findElement(By.id("dropzone2"));
 
-        // Print the cells values of the third row
-        List<WebElement> thirdRow = driver.findElements(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr[3]/td"));
-        System.out.println("Third row cell values: ");
-        for(WebElement cell : thirdRow) {
-            System.out.println(cell.getText());
-        }
+        Actions actions = new Actions(driver);
+        actions.dragAndDrop(ball, dropzone1).build().perform();
 
-        // Print the cell value of the second row and second column
-        WebElement cellValue = driver.findElement(By.xpath("//table[contains(@class, 'table-auto')]/tbody/tr[2]/td[2]"));
-        System.out.println("Second row, second cell value: " + cellValue.getText());
+        String dropzone1Text = dropzone1.getText();
+        System.out.println("Dropzone 1 Text: " + dropzone1Text);
 
-        // Close the browser
-        driver.quit();
+        if (dropzone1Text.contains("Ball")) {
+                System.out.println("Ball successfully moved to Dropzone 1");
+                }
+
+        ball = driver.findElement(By.id("ball"));
+
+        actions.dragAndDrop(ball, dropzone2).build().perform();
+
+        String dropzone2Text = dropzone2.getText();
+        System.out.println("Dropzone 2 Text: " + dropzone2Text);
+
+        if (dropzone2Text.contains("Ball")) {
+                System.out.println("Ball successfully moved to Dropzone 2");
+            }
+
+            driver.quit();
     }
 }
