@@ -1,200 +1,77 @@
-package appium.activities;
-
-import io.appium.java_client.AppiumBy;
-import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.PointerInput;
-import org.openqa.selenium.interactions.Sequence;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.*;
+package appium_project;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.Collections;
+import java.util.List;
+import static org.testng.Assert.assertEquals;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-public class Activity2_Category {
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
 
-    private AndroidDriver driver;
-    private WebDriverWait wait;
-
-    private final String CATEGORY = "Work";
-
+public class Activity2 {
+	AndroidDriver driver;
 
     @BeforeClass
-    public void setUp() throws MalformedURLException {
+    public void setup() throws MalformedURLException {
 
-        /*
         UiAutomator2Options options = new UiAutomator2Options();
 
-        options.setDeviceName("emulator-5554");
         options.setPlatformName("Android");
         options.setAutomationName("UiAutomator2");
-        options.setApp("/path/to/ToDo.apk");
+        options.setDeviceName("Android Emulator");
+        options.setApp("C:\\Apps\\ToDoList.apk");
 
         driver = new AndroidDriver(
-                new URL("http://127.0.0.1:4723"),
-                options
-        );
-        */
+                new URL("http://127.0.0.1:4723"), options);
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
+    
+@Test
+public void categoryTest() {
 
-    @Test
-    public void createAndAssignCategory() {
+    driver.findElement(AppiumBy.accessibilityId("More options")).click();
 
-        // --------------------------------
-        // Open dropdown/menu
-        // --------------------------------
+    driver.findElement(AppiumBy.androidUIAutomator(
+            "new UiSelector().text(\"Edit categories\")")).click();
 
-        click("Menu");
+    driver.findElement(AppiumBy.accessibilityId("New")).click();
 
-        // --------------------------------
-        // Select Edit categories
-        // --------------------------------
+    driver.findElement(By.id("text")).sendKeys("Office");
 
-        click("Edit categories");
+    driver.findElement(By.id("ok")).click();
 
-        // --------------------------------
-        // Add new category
-        // --------------------------------
+    driver.navigate().back();
 
-        click("New");
+    WebElement secondTask =
+            driver.findElements(By.id("taskText")).get(1);
+    
+    driver.longClickGesture(((RemoteWebElement) secondTask).getId());
+    //driver.longClickGesture(((RemoteWebElement)secondTask).getId());
 
-        WebElement categoryInput = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        AppiumBy.className("android.widget.EditText")
-                )
-        );
+    driver.findElement(By.id("category")).click();
 
-        categoryInput.sendKeys(CATEGORY);
+    driver.findElement(AppiumBy.androidUIAutomator(
+            "new UiSelector().text(\"Office\")")).click();
 
-        click("OK");
+    driver.findElement(By.id("ok")).click();
 
+    driver.findElement(By.id("filter")).click();
 
-        // --------------------------------
-        // Long press Activity 2
-        // --------------------------------
+    driver.findElement(AppiumBy.androidUIAutomator(
+            "new UiSelector().text(\"Office\")")).click();
 
-        WebElement task = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        AppiumBy.xpath(
-                                "//*[@text='Complete Activity 2']"
-                        )
-                )
-        );
+    List<WebElement> list =
+            driver.findElements(By.id("taskText"));
 
-        longPress(task);
-
-
-        // --------------------------------
-        // Edit task
-        // --------------------------------
-
-        click("Edit");
-
-
-        // --------------------------------
-        // Select category
-        // --------------------------------
-
-        click(CATEGORY);
-
-        click("OK");
-
-
-        // --------------------------------
-        // Open filter
-        // --------------------------------
-
-        click("Filter");
-
-        click(CATEGORY);
-
-
-        // --------------------------------
-        // Verify Activity 2
-        // --------------------------------
-
-        Assert.assertTrue(
-                isDisplayed("Complete Activity 2"),
-                "Activity 2 was not found under category: " + CATEGORY
-        );
-    }
-
-
-    private void longPress(WebElement element) {
-
-        PointerInput finger =
-                new PointerInput(
-                        PointerInput.Kind.TOUCH,
-                        "finger"
-                );
-
-        Sequence longPress =
-                new Sequence(finger, 1);
-
-        longPress.addAction(
-                finger.createPointerMove(
-                        Duration.ZERO,
-                        PointerInput.Origin.fromElement(element),
-                        0,
-                        0
-                )
-        );
-
-        longPress.addAction(
-                finger.createPointerDown(
-                        PointerInput.MouseButton.LEFT.asArg()
-                )
-        );
-
-        longPress.addAction(
-                new org.openqa.selenium.interactions.Pause(
-                        finger,
-                        Duration.ofSeconds(2)
-                )
-        );
-
-        longPress.addAction(
-                finger.createPointerUp(
-                        PointerInput.MouseButton.LEFT.asArg()
-                )
-        );
-
-        driver.perform(
-                Collections.singletonList(longPress)
-        );
-    }
-
-
-    private void click(String text) {
-
-        wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        AppiumBy.xpath("//*[@text='" + text + "']")
-                )
-        ).click();
-    }
-
-
-    private boolean isDisplayed(String text) {
-
-        return !driver.findElements(
-                AppiumBy.xpath("//*[@text='" + text + "']")
-        ).isEmpty();
-    }
-
-
-    @AfterClass
-    public void tearDown() {
-
-        if (driver != null) {
-            driver.quit();
-        }
-    }
+    assertEquals(list.size(),1);
+}
 }
